@@ -1,0 +1,219 @@
+/* Reset App.css to prevent Vite template styles from interfering with custom index.css */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.profile-picture-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-picture-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-picture-wrapper {
+  position: relative;
+  width: 100px !important;
+  height: 100px !important;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-picture {
+  width: 60px !important;
+  height: 70px !important;
+  max-width: 60px !important;
+  max-height: 70px !important;
+  min-width: 60px !important;
+  min-height: 70px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  display: block !important;
+  margin: 0 auto;
+  /* centers image if wrapper is wider */
+}
+
+.profile-picture-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  color: #6366f1;
+  border: 2px solid #e0e7ff;
+  margin: 0 auto;
+}
+
+.profile-camera-button {
+
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 32px;
+  height: 32px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-camera-button:hover {
+  background: #4338ca;
+}
+
+.profile-picture-info h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.profile-picture-info p {
+  margin: 0 0 12px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.profile-picture-info .btn-secondary {
+  display: inline-flex;
+
+  align-items: center;
+  gap: 7px;
+}
+
+/* FORCE PROFILE IMAGE TO BE ROUND AND CENTERED */
+
+.profile-picture-wrapper {
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  min-height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+.profile-picture-wrapper .profile-picture {
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  min-height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+.profile-picture-wrapper .profile-picture-placeholder {
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  min-height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  border-radius: 50% !important;
+}
+.user-avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.profile-picture-info .btn-secondary {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+/* Add this to your CSS file (App.css or index.css) to force clean structured boxes and strict black and white styling */
+
+.sidebar {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-right: 1px solid #333333;
+}
+
+.sidebar-header h2 {
+  color: #ffffff !important;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Spaces out each operation into its own distinct row */
+  padding: 10px;
+}
+
+.sidebar-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px 16px !important;
+  background-color: #111111 !important; /* Gives each operation its own distinct box */
+  border: 1px solid #222222 !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-link:hover, 
+.sidebar-link.active {
+  background-color: #222222 !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+.sidebar-link svg {
+  color: #ffffff !important;
+  min-width: 20px;
+}
+
+.sidebar-link span {
+  color: #ffffff !important;
+}
+
+.sidebar-footer {
+  padding: 10px;
+}
+
+.logout-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px;
+  width: 100%;
+  padding: 12px !important;
+  background-color: #111111 !important;
+  border: 1px solid #333333 !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #222222 !important;
+  border-color: #ffffff !important;
+}
