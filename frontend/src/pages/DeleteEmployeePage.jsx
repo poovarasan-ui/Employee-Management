@@ -98,17 +98,6 @@ const DeleteEmployeePage = () => {
 
   return (
     <div className="crud-page">
-      {/* Header */}
-      <div className="crud-header-banner delete-theme">
-        <div className="crud-icon-badge delete">
-          <Trash2 size={24} />
-        </div>
-        <div>
-          <div className="crud-op-tag delete">DELETE OPERATION</div>
-          <h2>Delete Employee Records</h2>
-          <p>Safely search, review, and remove employee profiles from the system with confirmation protection.</p>
-        </div>
-      </div>
 
       {/* Notifications */}
       {notification.message && (
@@ -190,7 +179,7 @@ const DeleteEmployeePage = () => {
                       </div>
                     </td>
                     <td>{emp.email}</td>
-                    <td><span className="department-badge">{emp.department}</span></td>
+                    <td><span className="department-badge" data-dept={emp.department}>{emp.department}</span></td>
                     <td>{emp.designation}</td>
                     <td><span className="salary-text">{formatSalaryINR(emp.salary)}</span></td>
                     <td style={{ textAlign: 'center' }}>

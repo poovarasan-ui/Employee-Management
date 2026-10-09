@@ -6,6 +6,7 @@ import {
 
 const EmployeeTable = ({
   employees = [],
+  totalCount = 0,
   loading = false,
   searchTerm = '',
   setSearchTerm,
@@ -84,6 +85,7 @@ const EmployeeTable = ({
   const formatSalaryINR = (val) => {
     const salaryRange = String(val ?? '').trim() || '0';
     return salaryRange
+    
       .split('-')
       .map((amount) => new Intl.NumberFormat('en-IN', {
         style: 'currency',
@@ -234,7 +236,7 @@ const EmployeeTable = ({
                   </td>
                   <td>{emp.phone}</td>
                   <td>
-                    <span className="department-badge">{emp.department}</span>
+                    <span className="department-badge" data-dept={emp.department}>{emp.department}</span>
                   </td>
                   <td>
                     <span className="designation-text">{emp.designation}</span>
@@ -264,7 +266,12 @@ const EmployeeTable = ({
       {/* Table Footer / Summary */}
       {!loading && employees.length > 0 && (
         <div className="table-footer-info">
-          <span>Showing <strong>{employees.length}</strong> employee records • Click any employee name to view their full details</span>
+          <span>
+            Showing <strong>{employees.length}</strong>
+            {totalCount > 0 && employees.length !== totalCount && (
+              <> of <strong>{totalCount}</strong></>
+            )} employee records • Click any employee name to view their full details
+          </span>
         </div>
       )}
 

@@ -5,6 +5,7 @@
   margin: 0;
   padding: 0;
   text-align: left;
+  font-family: var(--font-main);
 }
 
 .profile-picture-upload {
@@ -23,32 +24,40 @@
 
 .profile-picture-wrapper {
   position: relative;
-  width: 100px !important;
-  height: 100px !important;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  min-height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .profile-picture {
-  width: 60px !important;
-  height: 70px !important;
-  max-width: 60px !important;
-  max-height: 70px !important;
-  min-width: 60px !important;
-  min-height: 70px !important;
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  min-height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
   object-fit: cover !important;
   border-radius: 50% !important;
   display: block !important;
-  margin: 0 auto;
-  /* centers image if wrapper is wider */
+  margin: 0 !important;
 }
 
 .profile-picture-placeholder {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  min-height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  border-radius: 50% !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +68,6 @@
 }
 
 .profile-camera-button {
-
   position: absolute;
   right: -5px;
   bottom: -5px;
@@ -92,50 +100,12 @@
 
 .profile-picture-info .btn-secondary {
   display: inline-flex;
-
   align-items: center;
   gap: 7px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-/* FORCE PROFILE IMAGE TO BE ROUND AND CENTERED */
-
-.profile-picture-wrapper {
-  width: 120px !important;
-  height: 120px !important;
-  min-width: 120px !important;
-  min-height: 120px !important;
-  max-width: 120px !important;
-  max-height: 120px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  position: relative !important;
-}
-
-.profile-picture-wrapper .profile-picture {
-  width: 120px !important;
-  height: 120px !important;
-  min-width: 120px !important;
-  min-height: 120px !important;
-  max-width: 120px !important;
-  max-height: 120px !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  display: block !important;
-  margin: 0 !important;
-}
-
-.profile-picture-wrapper .profile-picture-placeholder {
-  width: 120px !important;
-  height: 120px !important;
-  min-width: 120px !important;
-  min-height: 120px !important;
-  max-width: 120px !important;
-  max-height: 120px !important;
-  border-radius: 50% !important;
-}
 .user-avatar-image {
   width: 100%;
   height: 100%;
@@ -143,16 +113,12 @@
   object-fit: cover;
   display: block;
 }
-.profile-picture-info .btn-secondary {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-/* Add this to your CSS file (App.css or index.css) to force clean structured boxes and strict black and white styling */
 
+/* Sidebar Theme Base Styling */
 .sidebar {
   background-color: #000000 !important;
   color: #ffffff !important;
-  border-right: 1px solid #333333;
+  border-right: 1px solid #1a1a1a;
 }
 
 .sidebar-header h2 {
@@ -162,37 +128,76 @@
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Spaces out each operation into its own distinct row */
-  padding: 10px;
+  gap: 4px;
+  padding: 14px 12px;
+  flex: 1;
+  justify-content: space-evenly;
 }
 
+/* ── Base link (inactive) ── */
 .sidebar-link {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  padding: 12px 16px !important;
-  background-color: #111111 !important; /* Gives each operation its own distinct box */
-  border: 1px solid #222222 !important;
+  gap: 11px !important;
+  padding: 13px 14px !important;
+  background-color: transparent !important;
+  border: none !important;
   border-radius: 6px !important;
-  color: #ffffff !important;
+  color: #888888 !important;
   text-decoration: none !important;
-  transition: all 0.2s ease-in-out;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  transition: color 0.15s ease;
+  position: relative;
 }
 
-.sidebar-link:hover, 
-.sidebar-link.active {
-  background-color: #222222 !important;
-  border-color: #ffffff !important;
+/* ── Hover ── */
+.sidebar-link:hover {
+  background-color: transparent !important;
   color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+/* ── Active: yellow brush-stroke blob ── */
+.sidebar-link.active {
+  color: #000000 !important;
+  font-weight: 800 !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Yellow blob behind active link */
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #f5c518;
+  border-radius: 4px 10px 8px 6px / 8px 4px 10px 6px;
+  transform: rotate(-1deg) scaleX(1.02);
+  box-shadow:
+    2px  2px 0 1px #d4a800,
+   -1px -1px 0 1px #f7d040,
+    3px  1px 0 0   #c49a00;
+  z-index: 0;
+}
+
+/* Push icon + label above the blob */
+.sidebar-link.active .sidebar-link-icon,
+.sidebar-link.active .sidebar-link-label {
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar-link svg {
-  color: #ffffff !important;
-  min-width: 20px;
+  color: inherit !important;
+  min-width: 18px;
+  flex-shrink: 0;
 }
 
 .sidebar-link span {
-  color: #ffffff !important;
+  color: inherit !important;
 }
 
 .sidebar-footer {
@@ -206,14 +211,173 @@
   gap: 10px;
   width: 100%;
   padding: 12px !important;
-  background-color: #111111 !important;
-  border: 1px solid #333333 !important;
+  background-color: transparent !important;
+  border: 1px solid #2a2a2a !important;
   border-radius: 6px !important;
-  color: #ffffff !important;
+  color: #888888 !important;
   cursor: pointer;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  transition: color 0.15s ease;
 }
 
 .logout-btn:hover {
-  background-color: #222222 !important;
-  border-color: #ffffff !important;
+  background-color: transparent !important;
+  border-color: #555555 !important;
+  color: #ffffff !important;
+}
+
+/* Settings Page */
+.settings-page {
+  display: flex;
+  padding: 30px;
+  background-color: #f4f6f8;
+}
+
+.settings-hero-card {
+  background: rgb(34, 34, 33);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+/* ========================================== */
+/* 1. DESKTOP / LAPTOP LAYOUT (> 768px)       */
+/* ========================================== */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+  font-family: var(--font-main) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.012em;
+}
+
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: left 0.3s ease-in-out;
+  font-family: var(--font-main);
+}
+
+.main-wrapper {
+  flex-grow: 1;
+  margin-left: 280px;
+  width: calc(100% - 280px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: var(--font-main);
+}
+
+.main-content {
+  font-family: var(--font-main);
+  flex-grow: 1;
+}
+
+/* ========================================== */
+/* 2. MOBILE / TABLET LAYOUT (<= 768px)       */
+/* ========================================== */
+@media screen and (max-width: 768px) {
+  .settings-page {
+    padding: 12px;
+  }
+
+  .settings-hero-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Force sidebar off-screen by default, slide in when .open class is added */
+  .sidebar {
+    position: fixed !important;
+    left: -280px !important;
+    top: 0 !important;
+    height: 100vh !important;
+    width: 280px !important;
+    z-index: 99999 !important;
+    background-color: #e0acac !important;
+    box-shadow: 10px 0 30px rgba(20, 20, 19, 0.8) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    transition: left 0.3s ease-in-out !important;
+  }
+
+  .sidebar.open {
+    left: 0 !important;
+  }
+
+  /* Make sure the internal menu items scroll cleanly */
+  .sidebar-menu {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+  }
+
+  /* Full screen width layout for content on mobile */
+  .main-wrapper {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ── Collapsed sidebar overrides (beat the !important rules above) ── */
+.sidebar.sidebar-collapsed .sidebar-link {
+  padding: 11px 0 !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* In collapsed mode, hide the blob pseudo-element — icon only */
+.sidebar.sidebar-collapsed .sidebar-link.active::before {
+  display: none;
+}
+
+/* Show a simple indicator instead when collapsed */
+.sidebar.sidebar-collapsed .sidebar-link.active {
+  color: #000000 !important;
+  background-color: #f5c518 !important;
+  border-radius: 8px !important;
+}
+
+.sidebar.sidebar-collapsed .logout-btn {
+  padding: 11px 0 !important;
+  justify-content: center !important;
+  gap: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .sidebar.sidebar-collapsed .sidebar-link {
+    padding: 9px 12px !important;
+    justify-content: flex-start !important;
+    gap: 11px !important;
+    background-color: transparent !important;
+    border: none !important;
+  }
+
+  .sidebar.sidebar-collapsed .sidebar-link.active::before {
+    display: block;
+  }
+
+  .sidebar.sidebar-collapsed .sidebar-link.active {
+    background-color: transparent !important;
+  }
+
+  .sidebar.sidebar-collapsed .logout-btn {
+    padding: 12px !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
 }

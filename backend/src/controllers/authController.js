@@ -7,7 +7,7 @@ const generateToken = require('../utils/generateToken');
 // @access  Public
 const registerUser = async (req, res) => {
   try {
-    const { email, phone, password, confirmPassword } = req.body;
+    const { email, phone, password, confirmPassword, role, employee_id, username } = req.body;
 
     if (!email || !phone || !password || !confirmPassword) {
       return res.status(400).json({
@@ -58,10 +58,15 @@ const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const validRole = ['admin', 'hr', 'employee'].includes(role) ? role : 'admin';
+
     const newUser = await User.create({
+      username: username ? username.trim() : email.split('@')[0],
       email: normalizedEmail,
       phone: cleanPhone,
-      password: hashedPassword
+      password: hashedPassword,
+      role: validRole,
+      employee_id: employee_id ? employee_id.trim() : ''
     });
 
     return res.status(201).json({
@@ -73,6 +78,8 @@ const registerUser = async (req, res) => {
         username: newUser.username || newUser.email.split('@')[0],
         email: newUser.email,
         phone: newUser.phone,
+        role: newUser.role,
+        employee_id: newUser.employee_id,
         createdAt: newUser.createdAt
       }
     });
@@ -142,6 +149,8 @@ const loginUser = async (req, res) => {
         username: user.username || user.email.split("@")[0],
         email: user.email,
         phone: user.phone,
+        role: user.role || 'admin',
+        employee_id: user.employee_id || '',
         profileImage: user.profileImage || ''
       }
     });
@@ -231,6 +240,8 @@ const updateProfile = async (req, res) => {
         username: user.username,
         email: user.email,
         phone: user.phone,
+        role: user.role || 'admin',
+        employee_id: user.employee_id || '',
         profileImage: user.profileImage || '',
         createdAt: user.createdAt
       }

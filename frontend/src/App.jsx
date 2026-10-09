@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Language Context Provider
-import { LanguageProvider } from './context/LanguageContext'; // ⚠️ Adjust path if your context file is in a different folder
+import { LanguageProvider } from './context/LanguageContext'; //⚠️ Adjust path if your context file is in a different folder
 
 // Auth Pages
 import Register from './pages/Register';
@@ -23,24 +23,25 @@ import EditEmployee from './pages/EditEmployee';
 import ViewEmployeeDetail from './pages/ViewEmployeeDetail';
 import UpdateEmployeePage from './pages/UpdateEmployeePage';
 import DeleteEmployeePage from './pages/DeleteEmployeePage';
-import ScanData from './pages/scandata';
+import ScanData from './pages/ScanData';
 import Settings from './pages/Settings';
+import Attendance from './pages/Attendance';
 
 function App() {
   return (
     <LanguageProvider>
       <Router>
         {/* Global Toast Container for mobile-messenger-style notifications across the full webpage */}
-        <ToastContainer 
-          position="top-center" 
-          autoClose={3000} 
-          hideProgressBar={true} 
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={true}
           newestOnTop={true}
-          closeOnClick 
-          rtl={false} 
-          pauseOnFocusLoss 
-          draggable 
-          pauseOnHover 
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
           theme="colored"
         />
 
@@ -49,20 +50,24 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Protected Dashboard and CRUD Operations Routes */}
+          {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
+              {/* Shared Routes: Accessible by both Employee & Admin */}
               <Route path="/dashboard" element={<Dashboard />} />
-
-              {/* CRUD Operations Routes */}
-              <Route path="/employees/add" element={<AddEmployee />} />
-              <Route path="/employees" element={<Employees />} />
-              <Route path="/employees/view/:id" element={<ViewEmployeeDetail />} />
-              <Route path="/employees/update" element={<UpdateEmployeePage />} />
-              <Route path="/employees/edit/:id" element={<EditEmployee />} />
-              <Route path="/employees/delete" element={<DeleteEmployeePage />} />
-              <Route path="/scandata" element={< ScanData/>} />
+              <Route path="/attendance" element={<Attendance />} />
               <Route path="/settings" element={<Settings />} />
+
+              {/* Admin & HR Only Routes */}
+              <Route element={<ProtectedRoute adminOnly={true} />}>
+                <Route path="/employees" element={<Employees />} />
+                <Route path="/employees/add" element={<AddEmployee />} />
+                <Route path="/employees/view/:id" element={<ViewEmployeeDetail />} />
+                <Route path="/employees/update" element={<UpdateEmployeePage />} />
+                <Route path="/employees/edit/:id" element={<EditEmployee />} />
+                <Route path="/employees/delete" element={<DeleteEmployeePage />} />
+                <Route path="/scandata" element={<ScanData />} />
+              </Route>
             </Route>
           </Route>
 

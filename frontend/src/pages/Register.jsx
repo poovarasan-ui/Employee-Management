@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Phone, Lock, Eye, EyeOff, UserPlus, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Mail, Phone, Lock, Eye, EyeOff, UserPlus, CheckCircle2, AlertCircle, Shield, User, Hash } from 'lucide-react';
 import { registerUser } from '../services/authService';
 import securityIcon from '../assets/security-icon.svg';
 
@@ -12,7 +12,9 @@ const Register = () => {
     phone: '',
     countryCode: '+91',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'admin', // 'admin' | 'employee'
+    employee_id: ''
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -75,6 +77,11 @@ const Register = () => {
       return;
     }
 
+    if (formData.role === 'employee' && !formData.employee_id?.trim()) {
+      setError('Please provide your Employee ID (e.g. EMP-101).');
+      return;
+    }
+
     try {
       setLoading(true);
       const data = await registerUser({
@@ -91,7 +98,9 @@ const Register = () => {
         phone: '',
         countryCode: '+91',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        role: 'admin',
+        employee_id: ''
       });
 
       navigate('/dashboard', { replace: true });
@@ -113,10 +122,14 @@ const Register = () => {
           </div>
           <div className="auth-badge">
             <UserPlus size={13} />
-            <span>New Account</span>
+            <span>{formData.role === 'admin' ? 'Admin Portal' : 'Employee Portal'}</span>
           </div>
-          <h1>Create Admin Account</h1>
-          <p>Sign up to start managing employees, departments, and payroll</p>
+          <h1>{formData.role === 'admin' ? 'Create Admin Account' : 'Create Employee Account'}</h1>
+          <p>
+            {formData.role === 'admin'
+              ? 'Sign up to manage company employees, payroll, and approvals'
+              : 'Sign up to access your personal punch clock, attendance, and leaves'}
+          </p>
         </div>
 
         {error && (
@@ -134,6 +147,83 @@ const Register = () => {
         )}
 
         <form onSubmit={handleSubmit} autoComplete="off">
+          {/* Account Role Selector */}
+          <div className="form-group" style={{ marginBottom: '18px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '8px' }}>
+              Select Account Role
+            </label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, role: 'admin' }))}
+                style={{
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: formData.role === 'admin' ? '2px solid #111111' : '1px solid var(--border-color)',
+                  background: formData.role === 'admin' ? '#111111' : '#ffffff',
+                  color: formData.role === 'admin' ? '#ffffff' : 'var(--text-main)',
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <Shield size={16} />
+                <span>Admin / HR</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, role: 'employee' }))}
+                style={{
+                  padding: '10px 12px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: formData.role === 'employee' ? '2px solid #111111' : '1px solid var(--border-color)',
+                  background: formData.role === 'employee' ? '#111111' : '#ffffff',
+                  color: formData.role === 'employee' ? '#ffffff' : 'var(--text-main)',
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <User size={16} />
+                <span>Employee</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Employee ID (Only for Employee accounts) */}
+          {formData.role === 'employee' && (
+            <div className="form-group">
+              <label htmlFor="employee_id">Employee ID *</label>
+              <div className="input-wrapper">
+                <Hash className="input-icon" size={18} />
+                <input
+                  id="employee_id"
+                  type="text"
+                  name="employee_id"
+                  placeholder="e.g. EMP-101"
+                  value={formData.employee_id}
+                  onChange={handleChange}
+                  className="form-input"
+                  required
+                />
+              </div>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>
+                Links your login to your employee profile, attendance, and leave calendar.
+              </span>
+            </div>
+          )}
+
           {/* Email */}
           <div className="form-group">
             <label htmlFor="email">Email Address</label>

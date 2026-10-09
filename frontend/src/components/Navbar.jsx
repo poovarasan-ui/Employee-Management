@@ -34,7 +34,7 @@ const Navbar = ({ toggleSidebar, title = 'Dashboard' }) => {
 
       {/* Added Activity Notification Box on the right side of the navbar */}
       <div className="navbar-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <ActivityNotification />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           <ActivityNotification />
       </div>
     </header>
   );

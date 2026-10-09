@@ -3,11 +3,12 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import LogoutConfirmModal from './LogoutConfirmModal';
-import { useLanguage } from '../context/LanguageContext'; // ⚠️ Adjust path if your context folder is elsewhere
+import { useLanguage } from '../context/LanguageContext';
 
 const Layout = () => {
   const { t } = useLanguage(); // Grab global translations
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,55 +17,8 @@ const Layout = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  const handleProfileImageChange = (event) => {
-    const file = event.target.files[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      setMessage({
-        type: 'error',
-        text: 'Please select an image file.'
-      });
-      return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      setMessage({
-        type: 'error',
-        text: 'Image size must be less than 2MB.'
-      });
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const image = reader.result;
-
-      setProfileImage(image);
-
-      const updatedUser = {
-        ...user,
-        profileImage: image
-      };
-
-      setUser(updatedUser);
-
-      localStorage.setItem(
-        'user',
-        JSON.stringify(updatedUser)
-      );
-
-      window.dispatchEvent(new Event('user-updated'));
-
-      setMessage({
-        type: 'success',
-        text: 'Profile picture updated successfully.'
-      });
-    };
-
-    reader.readAsDataURL(file);
+  const toggleCollapsed = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
   };
 
   const handleLogout = () => {
@@ -84,14 +38,22 @@ const Layout = () => {
     if (path === '/employees/delete') return 'Delete Employee Records';
     if (path === '/settings') return t.settings || 'Settings';
     if (path.startsWith('/employees/edit')) return 'Edit Employee Profile';
+    if (path === '/scandata') return 'Scan Records';
     return t.dashboard || 'Employee Dashboard';
   };
 
   return (
-    <div className="app-layout">
+    <div className={`app-layout ${sidebarOpen ? 'sidebar-is-open' : ''} ${sidebarCollapsed ? 'sidebar-is-collapsed' : ''}`}>
+      {/* Mobile Backdrop Overlay: Tapping outside the sidebar closes it */}
+      {sidebarOpen && (
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+      )}
+
       <Sidebar
         isOpen={sidebarOpen}
+        isCollapsed={sidebarCollapsed}
         toggleSidebar={toggleSidebar}
+        toggleCollapsed={toggleCollapsed}
         onLogout={() => setShowLogoutConfirm(true)}
       />
       
@@ -104,6 +66,7 @@ const Layout = () => {
           <Outlet />
         </main>
       </div>
+
       {showLogoutConfirm && (
         <LogoutConfirmModal
           onCancel={() => setShowLogoutConfirm(false)}

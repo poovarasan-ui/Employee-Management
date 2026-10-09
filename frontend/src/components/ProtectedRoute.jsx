@@ -1,11 +1,20 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
-const ProtectedRoute = () => {
+import { getCurrentUser, isAdminOrHr } from '../utils/auth';
+
+const ProtectedRoute = ({ adminOnly = false }) => {
   const token = localStorage.getItem('token');
 
-  // If token exists, allow access to protected page; otherwise redirect to /login
-  return token ? <Outlet /> : <Navigate to="/login" replace />;
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (adminOnly && !isAdminOrHr()) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

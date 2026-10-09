@@ -6,6 +6,7 @@ import {
   CheckCircle2, User
 } from 'lucide-react';
 import { getEmployeeById } from '../services/employeeService';
+import MonthlyAttendanceCalendar from '../components/MonthlyAttendanceCalendar';
 
 const ViewEmployeeDetail = () => {
   const { id } = useParams();
@@ -166,7 +167,14 @@ const ViewEmployeeDetail = () => {
 
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Monthly Attendance Calendar & Heatmap */}
+      <div style={{ marginTop: '24px' }}>
+        <MonthlyAttendanceCalendar 
+          employeeId={employee.employee_id} 
+          employeeName={employee.name} 
+        />
+      </div>
+
     </div>
   );
 };

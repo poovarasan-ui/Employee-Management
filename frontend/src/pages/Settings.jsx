@@ -1,43 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   User, Mail, Phone, MapPin, Bell, 
   Shield, Check, Save, Lock, AlertCircle, FileText, 
   Upload, X, Camera, Eye, EyeOff, Sparkles, 
   ShieldCheck, CheckCircle2, RotateCcw, Laptop, 
   Globe, BellRing, UserCheck, KeyRound, Trash2, Image as ImageIcon,
-  RefreshCw, Edit3, Briefcase
+  RefreshCw, Edit3, Briefcase, ChevronRight, Users
 } from 'lucide-react';
 import { logActivity } from '../services/activityService';
 import { useLanguage } from '../context/LanguageContext';
 
 export const translations = {
   English: {
-    accountSettings: "Account Settings",
-    subtitle: "Manage your profile details, security preferences, and account configurations",
-    saveChanges: "Save Changes",
-    saving: "Saving...",
-    editProfile: "Edit Profile",
-    cancelEdit: "Cancel",
-    discardChanges: "Reset",
-    savedSuccess: "Settings updated successfully!",
-    savedError: "Failed to save settings. Please try again.",
-    tabProfile: "Profile Information",
-    tabSecurity: "Security & Login",
-    tabNotifications: "Notifications",
-    tabPreferences: "Preferences & Language",
-    profileInfo: "Personal Details",
-    profileSub: "Your personal and public details visible across the workspace",
-    profileEditSub: "Update your personal details below and click Save Changes",
-    fullName: "Full Name",
-    email: "Email Address",
+    settingsTitle: "Settings",
+    settingsSubtitle: "Manage your administrator profile, organizational credentials, and system preferences",
+    tabAccount: "Account Settings",
+    tabSecurity: "Security & Access",
+    tabNotifications: "Notifications & Language",
+    firstName: "First Name",
+    lastName: "Last Name",
     phone: "Phone Number",
-    location: "Office / Location",
+    email: "Email address",
+    city: "City / Office",
+    country: "State / Country",
     designation: "Designation / Role",
-    bio: "Professional Bio",
-    profilePicture: "Profile Picture",
-    uploadImage: "Upload Photo",
-    removePhoto: "Remove Photo",
-    photoHint: "Recommended size: 500x500px JPG, PNG or WebP (Max 2MB)",
+    department: "Department Unit",
+    bio: "Admin Bio & Responsibilities",
+    updateBtn: "Update",
+    viewDirectory: "View Employee Directory",
+    managedStaff: "Managed Personnel",
+    activeDepts: "Active Departments",
+    activityLogs: "Recent Activity Logs",
     choosePhotoSource: "Change Profile Picture",
     selectFromGallery: "Select from Gallery",
     gallerySub: "Choose and upload an image file from your device",
@@ -46,46 +40,122 @@ export const translations = {
     captureBtn: "Capture Photo",
     retakeBtn: "Retake",
     savePhotoBtn: "Use This Photo",
+    removePhoto: "Remove Photo",
     cameraErrorMsg: "Camera access was denied or is not available. Please allow camera permissions in your browser.",
-    securityTitle: "Password & Security",
-    securitySub: "Update your password and configure account authentication protocols",
-    changePassword: "Change Password",
+    securityTitle: "Password & Authentication",
     newPassword: "New Password",
     confirmPassword: "Confirm New Password",
     twoFactor: "Two-Factor Authentication (2FA)",
-    twoFactorDesc: "Add a second verification step to secure your dashboard account",
+    twoFactorDesc: "Add an extra layer of verification to secure this administrator account",
     activeSessions: "Active Device Sessions",
-    activeSessionsDesc: "Devices currently signed into this administrator account",
-    currentDevice: "Current Workstation",
     notificationsTitle: "Notification Preferences",
-    notificationsSub: "Configure how and when you receive system alerts and updates",
     emailAlerts: "Email Notifications",
-    emailAlertsDesc: "Receive instant updates on critical changes and reports via email",
-    pushAlerts: "In-Browser Push Alerts",
-    pushAlertsDesc: "Receive instant popup alerts in your web browser while active",
+    pushAlerts: "Browser Push Alerts",
     weeklyDigest: "Weekly Activity Digest",
-    weeklyDigestDesc: "Receive a consolidated summary of employee changes every Monday",
     soundAlerts: "Activity Sound Effects",
-    soundAlertsDesc: "Play audio cues for real-time notification alerts",
-    preferencesTitle: "System Preferences & Localization",
-    preferencesSub: "Customize language, regional display formats, and defaults",
     languageSelect: "Application Language",
-    languageDesc: "Choose your preferred language interface for all dashboard modules",
-    dateFormat: "Date Display Format",
-    superAdmin: "Super Administrator",
-    verifiedAccount: "Verified Account",
-    profileCompleteness: "Profile Completeness"
+    savedSuccess: "Settings updated successfully!",
+    savedError: "Failed to save settings. Please try again."
   },
-  
-  
+  Tamil: {
+    settingsTitle: "அமைப்புகள்",
+    settingsSubtitle: "உங்கள் சுயவிவர விவரங்கள் மற்றும் கணக்கு விருப்பங்களை நிர்வகிக்கவும்",
+    tabAccount: "கணக்கு அமைப்புகள்",
+    tabSecurity: "பாதுகாப்பு & அணுகல்",
+    tabNotifications: "அறிவிப்புகள் & மொழி",
+    firstName: "முதல் பெயர்",
+    lastName: "கடைசி பெயர்",
+    phone: "தொலைபேசி எண்",
+    email: "மின்னஞ்சல் முகவரி",
+    city: "நகரம் / அலுவலகம்",
+    country: "மாநிலம் / நாடு",
+    designation: "பதவி / பங்கு",
+    department: "துறை பிரிவு",
+    bio: "பொறுப்புகள் மற்றும் குறிப்பு",
+    updateBtn: "புதுப்பிக்கவும்",
+    viewDirectory: "பணியாளர் பட்டியலைக் காண்க",
+    managedStaff: "பணியாளர்கள்",
+    activeDepts: "செயலில் உள்ள துறைகள்",
+    activityLogs: "செயல்பாட்டு பதிவுகள்",
+    choosePhotoSource: "புகைப்படத்தை மாற்றவும்",
+    selectFromGallery: "கேலரியிலிருந்து தேர்வு செய்யவும்",
+    gallerySub: "உங்கள் சாதனத்திலிருந்து படத்தை பதிவேற்றவும்",
+    takePhoto: "புகைப்படம் எடுக்கவும்",
+    cameraSub: "கேமராவைப் பயன்படுத்தி படம் எடுக்கவும்",
+    captureBtn: "படம் எடுக்கவும்",
+    retakeBtn: "மீண்டும் எடுக்கவும்",
+    savePhotoBtn: "இதைப் பயன்படுத்தவும்",
+    removePhoto: "புகைப்படத்தை நீக்கு",
+    cameraErrorMsg: "கேமரா அணுகல் மறுக்கப்பட்டது.",
+    securityTitle: "கடவுச்சொல் & பாதுகாப்பு",
+    newPassword: "புதிய கடவுச்சொல்",
+    confirmPassword: "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
+    twoFactor: "இரு-காரணி அங்கீகாரம் (2FA)",
+    twoFactorDesc: "கணக்கைப் பாதுகாக்க கூடுதல் சரிபார்ப்பைச் சேர்க்கவும்",
+    activeSessions: "செயலில் உள்ள அமர்வுகள்",
+    notificationsTitle: "அறிவிப்பு விருப்பங்கள்",
+    emailAlerts: "மின்னஞ்சல் அறிவிப்புகள்",
+    pushAlerts: "உலாவி அறிவிப்புகள்",
+    weeklyDigest: "வாராந்திர அறிக்கை",
+    soundAlerts: "ஒலி விளைவுகள்",
+    languageSelect: "பயன்பாட்டு மொழி",
+    savedSuccess: "அமைப்புகள் வெற்றிகரமாக சேமிக்கப்பட்டன!",
+    savedError: "சேமிக்க முடியவில்லை."
+  },
+  Spanish: {
+    settingsTitle: "Ajustes",
+    settingsSubtitle: "Gestione los detalles de su perfil y configuración de administrador",
+    tabAccount: "Ajustes de la cuenta",
+    tabSecurity: "Seguridad y acceso",
+    tabNotifications: "Notificaciones e idioma",
+    firstName: "Nombre",
+    lastName: "Apellido",
+    phone: "Número de teléfono",
+    email: "Correo electrónico",
+    city: "Ciudad / Oficina",
+    country: "Estado / País",
+    designation: "Cargo / Rol",
+    department: "Departamento",
+    bio: "Biografía y funciones",
+    updateBtn: "Actualizar",
+    viewDirectory: "Ver directorio de empleados",
+    managedStaff: "Personal administrado",
+    activeDepts: "Departamentos activos",
+    activityLogs: "Registros de actividad",
+    choosePhotoSource: "Cambiar foto de perfil",
+    selectFromGallery: "Seleccionar de la galería",
+    gallerySub: "Suba un archivo de imagen desde su dispositivo",
+    takePhoto: "Tomar una foto",
+    cameraSub: "Use su cámara web para capturar una foto",
+    captureBtn: "Capturar",
+    retakeBtn: "Repetir",
+    savePhotoBtn: "Usar esta foto",
+    removePhoto: "Eliminar foto",
+    cameraErrorMsg: "El acceso a la cámara fue denegado.",
+    securityTitle: "Contraseña y seguridad",
+    newPassword: "Nueva contraseña",
+    confirmPassword: "Confirmar contraseña",
+    twoFactor: "Autenticación en dos pasos (2FA)",
+    twoFactorDesc: "Añada una capa adicional de seguridad a su cuenta",
+    activeSessions: "Sesiones activas",
+    notificationsTitle: "Preferencias de notificación",
+    emailAlerts: "Notificaciones por correo",
+    pushAlerts: "Alertas push del navegador",
+    weeklyDigest: "Resumen semanal",
+    soundAlerts: "Efectos de sonido",
+    languageSelect: "Idioma de la aplicación",
+    savedSuccess: "¡Ajustes actualizados con éxito!",
+    savedError: "Error al guardar los ajustes."
+  }
 };
 
 const Settings = () => {
+  const navigate = useNavigate();
   const { language: currentLang, changeLanguage } = useLanguage();
   const t = translations[currentLang] || translations.English;
 
-  const [activeTab, setActiveTab] = useState('profile');
-  const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState('account');
+  const [isEditMode, setIsEditMode] = useState(false);
   const [messageBox, setMessageBox] = useState({ isOpen: false, type: 'success', text: '' });
   const [loading, setLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
@@ -104,18 +174,29 @@ const Settings = () => {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
 
+  // Split Name Helper
+  const parseNames = (fullName) => {
+    const parts = (fullName || '').trim().split(' ');
+    const first = parts[0] || '';
+    const last = parts.slice(1).join(' ') || '';
+    return { first, last };
+  };
+
   // Profile Form State
   const [profile, setProfile] = useState({
-    username: '',
-    email: '',
-    phone: '',
-    location: '',
+    firstName: 'Poovarasan',
+    lastName: 'Sambath',
+    username: 'Poovarasan Sambath',
+    email: 'poovarasansam123@gmail.com',
+    phone: '+91 8072672917',
+    city: 'Bangalore',
+    country: 'Karnataka, India',
+    location: 'Bangalore, India',
+    department: 'Operations & Engineering',
     designation: 'Lead Administrator',
-    bio: '',
+    bio: 'Managing employee directory, system access control, and organizational operational metrics.',
     avatar: '',
   });
-
-  const [originalProfile, setOriginalProfile] = useState(null);
 
   // Passwords State
   const [passwords, setPasswords] = useState({
@@ -153,17 +234,24 @@ const Settings = () => {
     const fetchUserData = () => {
       try {
         const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const rawName = storedUser.username || storedUser.name || 'Poovarasan Sambath';
+        const { first, last } = parseNames(rawName);
+
         const initialData = {
-          username: storedUser.username || storedUser.name || 'poovarasansambath',
-          email: storedUser.email || 'poovarasansambath1345@gmail.com',
+          firstName: storedUser.firstName || first || 'Poovarasan',
+          lastName: storedUser.lastName || last || 'Sambath',
+          username: rawName,
+          email: storedUser.email || 'poovarasansam123@gmail.com',
           phone: storedUser.phone || '+91 8072672917',
+          city: storedUser.city || 'Bangalore',
+          country: storedUser.country || 'Karnataka, India',
           location: storedUser.location || 'Bangalore, India',
+          department: storedUser.department || 'Operations & Engineering',
           designation: storedUser.designation || 'Lead Administrator',
-          bio: storedUser.bio || 'Managing employee directory, access control, and operational metrics across departments.',
+          bio: storedUser.bio || 'Managing employee directory, system access control, and organizational operational metrics.',
           avatar: storedUser.avatar || storedUser.profilePic || storedUser.profileImage || '',
         };
         setProfile(initialData);
-        setOriginalProfile(initialData);
       } catch (err) {
         console.error('Failed to load settings data:', err);
       }
@@ -175,33 +263,15 @@ const Settings = () => {
     };
   }, []);
 
-  // Calculate Profile Completeness Percentage
-  const calculateCompleteness = () => {
-    let score = 0;
-    if (profile.username && profile.username.trim()) score += 20;
-    if (profile.email && profile.email.trim()) score += 20;
-    if (profile.phone && profile.phone.trim()) score += 20;
-    if (profile.location && profile.location.trim()) score += 15;
-    if (profile.avatar) score += 15;
-    if (profile.bio && profile.bio.trim()) score += 10;
-    return score;
-  };
-
-  const completeness = calculateCompleteness();
-
-  // Password Strength Calculator (0 to 3)
-  const getPasswordStrength = (pass) => {
-    if (!pass) return 0;
-    let score = 1;
-    if (pass.length >= 6) score = 2;
-    if (pass.length >= 8 && /[A-Z]/.test(pass) && /[0-9]/.test(pass)) score = 3;
-    return score;
-  };
-
-  const passStrength = getPasswordStrength(passwords.newPassword);
-
   const handleProfileChange = (e) => {
-    setProfile((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setProfile((prev) => {
+      const updated = { ...prev, [name]: value };
+      if (name === 'firstName' || name === 'lastName') {
+        updated.username = `${name === 'firstName' ? value : updated.firstName} ${name === 'lastName' ? value : updated.lastName}`.trim();
+      }
+      return updated;
+    });
   };
 
   // Helper to save avatar to localStorage & dispatch event
@@ -268,7 +338,6 @@ const Settings = () => {
     }
   };
 
-  // Attach stream when video element is mounted
   useEffect(() => {
     if (isCameraOpen && streamRef.current && videoRef.current && !capturedPhoto) {
       videoRef.current.srcObject = streamRef.current;
@@ -283,7 +352,6 @@ const Settings = () => {
     canvas.height = video.videoHeight || 640;
     const ctx = canvas.getContext('2d');
 
-    // Mirror image to match live preview
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -319,7 +387,6 @@ const Settings = () => {
     setCameraError('');
   };
 
-  // 3. REMOVE AVATAR
   const handleRemoveAvatar = () => {
     setIsAvatarPickerOpen(false);
     saveAvatarImage('');
@@ -340,15 +407,6 @@ const Settings = () => {
     const updated = { ...security, twoFactorAuth: !security.twoFactorAuth };
     setSecurity(updated);
     localStorage.setItem('appSecurity', JSON.stringify(updated));
-  };
-
-  const handleReset = () => {
-    if (originalProfile) {
-      setProfile(originalProfile);
-    }
-    setPasswords({ newPassword: '', confirmPassword: '' });
-    setPasswordError('');
-    setIsEditing(false);
   };
 
   const handleSave = async (e) => {
@@ -374,6 +432,8 @@ const Settings = () => {
       const newUserObj = { 
         ...currentUser, 
         ...profile,
+        username: profile.username || `${profile.firstName} ${profile.lastName}`.trim(),
+        name: profile.username || `${profile.firstName} ${profile.lastName}`.trim(),
         profileImage: profile.avatar,
         profilePic: profile.avatar
       };
@@ -381,12 +441,9 @@ const Settings = () => {
       window.dispatchEvent(new Event('user-updated'));
 
       setPasswords({ newPassword: '', confirmPassword: '' });
-      setOriginalProfile(profile);
-      setIsEditing(false);
+      setIsEditMode(false);
       
-      // Log activity in background
-      logActivity('PROFILE', 'Profile Updated', 'Your profile information and settings were updated successfully');
-
+      logActivity('PROFILE', 'Profile Updated', 'Administrator profile details were updated successfully');
       setMessageBox({ isOpen: true, type: 'success', text: t.savedSuccess });
     } catch (error) {
       console.error('Failed to update settings:', error);
@@ -396,11 +453,12 @@ const Settings = () => {
     }
   };
 
-  const userInitial = profile.username ? profile.username.charAt(0).toUpperCase() : 'A';
+  const userDisplayName = profile.username || `${profile.firstName} ${profile.lastName}`.trim() || 'Poovarasan Sambath';
+  const userInitial = userDisplayName.charAt(0).toUpperCase();
 
   return (
-    <div className="settings-page">
-      {/* Hidden File Input for Gallery / Device Upload */}
+    <div className="settings-indigo-container">
+      {/* Hidden File Input */}
       <input 
         ref={fileInputRef}
         type="file" 
@@ -409,7 +467,7 @@ const Settings = () => {
         style={{ display: 'none' }} 
       />
 
-      {/* 1. Modal: Choose Photo Source (Gallery vs Live Camera) */}
+      {/* 1. Modal: Choose Photo Source */}
       {isAvatarPickerOpen && (
         <div className="settings-modal-backdrop" onClick={() => setIsAvatarPickerOpen(false)}>
           <div className="avatar-source-modal-window" onClick={(e) => e.stopPropagation()}>
@@ -419,14 +477,12 @@ const Settings = () => {
                 type="button" 
                 className="avatar-modal-close-btn" 
                 onClick={() => setIsAvatarPickerOpen(false)}
-                title="Close"
               >
                 <X size={18} />
               </button>
             </div>
 
             <div className="avatar-options-grid">
-              {/* Option 1: Select from Gallery */}
               <button 
                 type="button" 
                 className="avatar-option-btn" 
@@ -441,7 +497,6 @@ const Settings = () => {
                 </div>
               </button>
 
-              {/* Option 2: Take a Photo (Live Camera) */}
               <button 
                 type="button" 
                 className="avatar-option-btn" 
@@ -455,48 +510,46 @@ const Settings = () => {
                   <p>{t.cameraSub}</p>
                 </div>
               </button>
+            </div>
 
-              {/* Option 3: Remove current photo (if avatar exists) */}
-              {profile.avatar && (
+            {profile.avatar && (
+              <div className="avatar-modal-footer">
                 <button 
                   type="button" 
-                  className="avatar-option-btn" 
+                  className="btn-remove-avatar"
                   onClick={handleRemoveAvatar}
                 >
-                  <div className="avatar-option-icon remove">
-                    <Trash2 size={24} />
-                  </div>
-                  <div className="avatar-option-texts">
-                    <h4>{t.removePhoto}</h4>
-                    <p>Remove custom profile picture and use initials</p>
-                  </div>
+                  <Trash2 size={16} />
+                  <span>{t.removePhoto}</span>
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* 2. Modal: Live Camera Viewfinder & Snapshot */}
+      {/* 2. Live Camera Modal */}
       {isCameraOpen && (
         <div className="settings-modal-backdrop" onClick={closeCameraModal}>
-          <div className="avatar-source-modal-window" style={{ maxWidth: '420px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
-            <div className="avatar-modal-header">
-              <h3>{capturedPhoto ? 'Review Snapshot' : t.takePhoto}</h3>
+          <div className="camera-modal-window" onClick={(e) => e.stopPropagation()}>
+            <div className="camera-modal-header">
+              <div className="camera-modal-title">
+                <Camera size={20} />
+                <h3>{t.takePhoto}</h3>
+              </div>
               <button 
                 type="button" 
-                className="avatar-modal-close-btn" 
+                className="camera-modal-close-btn" 
                 onClick={closeCameraModal}
-                title="Close Camera"
               >
                 <X size={18} />
               </button>
             </div>
 
             {cameraError ? (
-              <div style={{ padding: '24px 12px' }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#fee2e2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto' }}>
-                  <AlertCircle size={28} />
+              <div className="camera-error-wrap">
+                <div className="camera-error-icon">
+                  <AlertCircle size={32} />
                 </div>
                 <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: '1.5', margin: '0 0 20px 0' }}>
                   {cameraError}
@@ -564,7 +617,7 @@ const Settings = () => {
         </div>
       )}
 
-      {/* Modal Dialog for Save Status */}
+      {/* 3. Status Modal */}
       {messageBox.isOpen && (
         <div className="settings-modal-backdrop" onClick={() => setMessageBox({ ...messageBox, isOpen: false })}>
           <div className="settings-modal-window" onClick={(e) => e.stopPropagation()}>
@@ -587,486 +640,325 @@ const Settings = () => {
         </div>
       )}
 
-      {/* Hero Profile Banner */}
-      <div className="settings-hero-card">
-        <div className="settings-hero-main">
-          <div className="settings-hero-profile-wrap">
-            <div className="settings-hero-avatar-wrap">
-              <div 
-                style={{ width: '100%', height: '100%', cursor: 'pointer' }}
-                onClick={() => setIsAvatarPickerOpen(true)}
-                title="Click to Change Photo (Gallery or Camera)"
-              >
-                {profile.avatar ? (
-                  <img src={profile.avatar} alt={profile.username} className="settings-hero-avatar" />
-                ) : (
-                  <div className="settings-hero-avatar-placeholder">
-                    {userInitial}
-                  </div>
-                )}
-              </div>
-              <span className="settings-hero-status-dot" title="Online Admin" />
-              <button 
-                type="button"
-                className="settings-hero-avatar-btn" 
-                onClick={() => setIsAvatarPickerOpen(true)}
-                title="Change Photo (Select from Gallery or Take Photo)"
-              >
-                <Camera size={15} />
-              </button>
-            </div>
-
-            <div className="settings-hero-info">
-              <h1 className="settings-hero-name">
-                {profile.username || 'System User'}
-              </h1>
-              <div className="settings-hero-pills">
-                <span className="settings-badge-pill settings-badge-admin">
-                  <Sparkles size={13} />
-                  <span>{t.superAdmin}</span>
-                </span>
-                <span className="settings-badge-pill settings-badge-email">
-                  <ShieldCheck size={13} />
-                  <span>{profile.email}</span>
-                </span>
-                {profile.location && (
-                  <span className="settings-badge-pill settings-badge-location">
-                    <MapPin size={13} />
-                    <span>{profile.location}</span>
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Hero Actions: Edit Profile Toggle / Save & Cancel */}
-          <div className="settings-hero-actions">
-            {!isEditing ? (
-              <button 
-                type="button" 
-                onClick={() => {
-                  setActiveTab('profile');
-                  setIsEditing(true);
-                }} 
-                className="btn-hero-save"
-                title="Edit profile details"
-              >
-                <Edit3 size={15} />
-                <span>{t.editProfile}</span>
-              </button>
-            ) : (
-              <>
-                <button 
-                  type="button" 
-                  onClick={handleReset} 
-                  className="btn-hero-reset"
-                  title="Cancel editing"
-                >
-                  <X size={15} />
-                  <span>{t.cancelEdit}</span>
-                </button>
-                <button 
-                  type="button" 
-                  onClick={handleSave} 
-                  className="btn-hero-save" 
-                  disabled={loading}
-                >
-                  <Save size={16} />
-                  <span>{loading ? t.saving : t.saveChanges}</span>
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Profile Completeness Meter */}
-        <div className="profile-completeness-bar">
-          <div className="completeness-header">
-            <span className="completeness-title">
-              <UserCheck size={14} />
-              <span>{t.profileCompleteness}</span>
-            </span>
-            <span className="completeness-score">{completeness}%</span>
-          </div>
-          <div className="completeness-track">
-            <div className="completeness-fill" style={{ width: `${completeness}%` }} />
-          </div>
-          <div className="completeness-steps">
-            <span className={`completeness-step-chip ${profile.username ? 'completeness-step-done' : 'completeness-step-pending'}`}>
-              {profile.username ? '✓' : '○'} Full Name
-            </span>
-            <span className={`completeness-step-chip ${profile.email ? 'completeness-step-done' : 'completeness-step-pending'}`}>
-              {profile.email ? '✓' : '○'} Email Address
-            </span>
-            <span className={`completeness-step-chip ${profile.avatar ? 'completeness-step-done' : 'completeness-step-pending'}`}>
-              {profile.avatar ? '✓' : '○'} Profile Photo
-            </span>
-            <span className={`completeness-step-chip ${profile.phone ? 'completeness-step-done' : 'completeness-step-pending'}`}>
-              {profile.phone ? '✓' : '○'} Phone Number
-            </span>
-            <span className={`completeness-step-chip ${profile.location ? 'completeness-step-done' : 'completeness-step-pending'}`}>
-              {profile.location ? '✓' : '○'} Location
-            </span>
-            <span className={`completeness-step-chip ${profile.bio ? 'completeness-step-done' : 'completeness-step-pending'}`}>
-              {profile.bio ? '✓' : '○'} Bio Note
-            </span>
-          </div>
-        </div>
+      {/* Header Block */}
+      <div className="settings-indigo-header">
+        <h1 className="settings-indigo-title">{t.settingsTitle}</h1>
+        <p className="settings-indigo-subtitle">{t.settingsSubtitle}</p>
       </div>
 
-      {/* Modern Segmented Tab Bar */}
-      <div className="settings-tabs-nav">
-        {[
-          { id: 'profile', label: t.tabProfile, icon: User },
-          { id: 'security', label: t.tabSecurity, icon: Shield },
-          { id: 'notifications', label: t.tabNotifications, icon: Bell },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`settings-tab-btn ${isActive ? 'active' : ''}`}
-            >
-              <Icon size={16} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Active Tab Content Card */}
-      <div className="settings-card">
+      {/* Main Two-Column Layout */}
+      <div className="settings-indigo-layout">
         
-        {/* TAB 1: PROFILE INFORMATION */}
-        {activeTab === 'profile' && (
-          <div>
-            <div className="settings-card-header">
-              <div className="settings-card-title-wrap">
-                <div className="settings-card-icon-badge">
-                  <User size={22} />
-                </div>
-                <div>
-                  <h2>{t.profileInfo}</h2>
-                  <p>{isEditing ? t.profileEditSub : t.profileSub}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* 1. READ-ONLY SUMMARY VIEW (WHEN NOT EDITING) */}
-            {!isEditing ? (
-              <div>
-                <div className="profile-view-grid">
-                  {/* Full Name */}
-                  <div className="profile-view-item">
-                    <div className="profile-view-icon">
-                      <User size={18} />
-                    </div>
-                    <div className="profile-view-content">
-                      <div className="profile-view-label">{t.fullName}</div>
-                      <div className="profile-view-value">{profile.username || 'Not specified'}</div>
-                    </div>
-                  </div>
-
-                  {/* Email Address */}
-                  <div className="profile-view-item">
-                    <div className="profile-view-icon">
-                      <Mail size={18} />
-                    </div>
-                    <div className="profile-view-content">
-                      <div className="profile-view-label">{t.email}</div>
-                      <div className="profile-view-value" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>{profile.email}</span>
-                        <span className="settings-badge-pill settings-badge-admin" style={{ fontSize: '10.5px', padding: '1px 6px' }}>
-                          Verified
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Phone Number */}
-                  <div className="profile-view-item">
-                    <div className="profile-view-icon">
-                      <Phone size={18} />
-                    </div>
-                    <div className="profile-view-content">
-                      <div className="profile-view-label">{t.phone}</div>
-                      <div className="profile-view-value">{profile.phone || 'Not specified'}</div>
-                    </div>
-                  </div>
-
-                  {/* Location */}
-                  <div className="profile-view-item">
-                    <div className="profile-view-icon">
-                      <MapPin size={18} />
-                    </div>
-                    <div className="profile-view-content">
-                      <div className="profile-view-label">{t.location}</div>
-                      <div className="profile-view-value">{profile.location || 'Not specified'}</div>
-                    </div>
-                  </div>
-
-                  {/* Designation */}
-                  <div className="profile-view-item full-width">
-                    <div className="profile-view-icon">
-                      <Briefcase size={18} />
-                    </div>
-                    <div className="profile-view-content">
-                      <div className="profile-view-label">{t.designation}</div>
-                      <div className="profile-view-value">{profile.designation || 'Lead Administrator'}</div>
-                    </div>
-                  </div>
-
-                  {/* Bio */}
-                  <div className="profile-view-item full-width">
-                    <div className="profile-view-icon">
-                      <FileText size={18} />
-                    </div>
-                    <div className="profile-view-content">
-                      <div className="profile-view-label">{t.bio}</div>
-                      <div className="profile-view-bio">{profile.bio || 'No bio information added yet.'}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        {/* LEFT COLUMN: Profile Card */}
+        <div className="settings-indigo-profile-card">
+          <div className="settings-indigo-avatar-wrap">
+            {profile.avatar ? (
+              <img src={profile.avatar} alt="Admin Avatar" className="settings-indigo-avatar-img" />
             ) : (
-              /* 2. EDITABLE FORM VIEW (ONLY WHEN EDIT PROFILE IS CLICKED) */
-              <form onSubmit={handleSave}>
-                <div className="settings-form-grid">
-                  {/* Full Name */}
-                  <div className="settings-field-group">
-                    <label className="settings-label">
-                      <span>{t.fullName} *</span>
-                    </label>
-                    <div className="settings-input-wrapper">
-                      <User size={18} className="settings-input-icon" />
-                      <input
-                        type="text"
-                        name="username"
-                        value={profile.username}
-                        onChange={handleProfileChange}
-                        placeholder="e.g. Poovarasan Sambath"
-                        className="settings-input"
-                        required
-                        autoFocus
-                      />
-                    </div>
-                  </div>
+              <div className="settings-indigo-avatar-fallback">{userInitial}</div>
+            )}
+            <button 
+              type="button" 
+              className="settings-indigo-camera-badge" 
+              onClick={() => setIsAvatarPickerOpen(true)}
+              title="Change Photo"
+            >
+              <Camera size={16} />
+            </button>
+          </div>
 
-                  {/* Email (Read-Only) */}
-                  <div className="settings-field-group">
-                    <label className="settings-label">
-                      <span>{t.email}</span>
-                      <span className="settings-label-badge">{t.verifiedAccount}</span>
-                    </label>
-                    <div className="settings-input-wrapper">
-                      <Mail size={18} className="settings-input-icon" />
-                      <input
-                        type="email"
-                        name="email"
-                        value={profile.email}
-                        disabled
-                        className="settings-input"
-                      />
-                    </div>
-                    <span className="field-helper-text">
-                      <span>Linked with your primary administrative login</span>
-                    </span>
-                  </div>
+          <h3 className="settings-indigo-name">{userDisplayName}</h3>
+          <p className="settings-indigo-role">{profile.designation || 'Lead Administrator'}</p>
 
-                  {/* Phone Number */}
-                  <div className="settings-field-group">
-                    <label className="settings-label">
-                      <span>{t.phone}</span>
-                    </label>
-                    <div className="settings-input-wrapper">
-                      <Phone size={18} className="settings-input-icon" />
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={profile.phone}
-                        onChange={handleProfileChange}
-                        placeholder="+91 80726 72917"
-                        className="settings-input"
-                      />
-                    </div>
-                  </div>
+          {/* Employee Management Stat Rows */}
+          <div className="settings-indigo-stats-list">
+            <div className="settings-indigo-stat-row">
+              <span>{t.managedStaff}</span>
+              <span className="settings-indigo-stat-pill">66</span>
+            </div>
+            <div className="settings-indigo-stat-row">
+              <span>{t.activeDepts}</span>
+              <span className="settings-indigo-stat-pill">12</span>
+            </div>
+            <div className="settings-indigo-stat-row">
+              <span>{t.activityLogs}</span>
+              <span className="settings-indigo-stat-pill">09</span>
+            </div>
+          </div>
 
-                  {/* Location */}
-                  <div className="settings-field-group">
-                    <label className="settings-label">
-                      <span>{t.location}</span>
-                    </label>
-                    <div className="settings-input-wrapper">
-                      <MapPin size={18} className="settings-input-icon" />
-                      <input
-                        type="text"
-                        name="location"
-                        value={profile.location}
-                        onChange={handleProfileChange}
-                        placeholder="e.g. Bangalore, Karnataka"
-                        className="settings-input"
-                      />
-                    </div>
-                  </div>
+          {/* Action Button */}
+          <button 
+            type="button" 
+            className="settings-indigo-btn-amber"
+            onClick={() => navigate('/employees')}
+          >
+            <Users size={16} />
+            <span>{t.viewDirectory}</span>
+          </button>
+        </div>
 
-                  {/* Designation / Role */}
-                  <div className="settings-field-group full-width">
-                    <label className="settings-label">
-                      <span>{t.designation}</span>
-                    </label>
-                    <div className="settings-input-wrapper">
-                      <Sparkles size={18} className="settings-input-icon" />
-                      <input
-                        type="text"
-                        name="designation"
-                        value={profile.designation}
-                        onChange={handleProfileChange}
-                        placeholder="e.g. Lead Operations Administrator"
-                        className="settings-input"
-                      />
-                    </div>
-                  </div>
+        {/* RIGHT COLUMN: Tabbed Form Panels */}
+        <div className="settings-indigo-form-panel">
+          
+          {/* Horizontal Tabs Bar */}
+          <div className="settings-indigo-tabs-bar">
+            <button 
+              type="button" 
+              className={`settings-indigo-tab-btn ${activeTab === 'account' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('account'); setIsEditMode(false); }}
+            >
+              {t.tabAccount}
+            </button>
+            <button 
+              type="button" 
+              className={`settings-indigo-tab-btn ${activeTab === 'security' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('security'); setIsEditMode(false); }}
+            >
+              {t.tabSecurity}
+            </button>
+            <button 
+              type="button" 
+              className={`settings-indigo-tab-btn ${activeTab === 'notifications' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('notifications'); setIsEditMode(false); }}
+            >
+              {t.tabNotifications}
+            </button>
+          </div>
 
-                  {/* Bio */}
-                  <div className="settings-field-group full-width">
-                    <label className="settings-label">
-                      <span>{t.bio}</span>
-                      <span className="settings-label-badge">{profile.bio.length}/300</span>
-                    </label>
-                    <div className="settings-input-wrapper">
-                      <FileText size={18} className="settings-input-icon" style={{ top: '16px' }} />
-                      <textarea
-                        name="bio"
-                        value={profile.bio}
-                        onChange={handleProfileChange}
-                        placeholder="Brief description of your role and responsibilities..."
-                        maxLength={300}
-                        className="settings-textarea"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Form Action Buttons */}
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px', paddingTop: '18px', borderTop: '1px solid #e2e8f0' }}>
-                  <button 
-                    type="button" 
-                    className="btn-camera-secondary"
-                    onClick={handleReset}
+          {/* TAB 1: Account Settings Form */}
+          {activeTab === 'account' && (
+            <form onSubmit={handleSave}>
+              {/* Edit / Cancel header row */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '18px' }}>
+                {!isEditMode ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditMode(true)}
+                    className="settings-indigo-btn-amber"
+                    style={{ width: 'auto', padding: '9px 22px', display: 'inline-flex', gap: '7px', fontSize: '13.5px' }}
+                  >
+                    <Edit3 size={15} />
+                    <span>Edit Profile</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditMode(false)}
+                    style={{
+                      width: 'auto', padding: '9px 22px', display: 'inline-flex', gap: '7px',
+                      fontSize: '13.5px', background: 'transparent', border: '1.5px solid #cbd5e1',
+                      borderRadius: '8px', cursor: 'pointer', color: '#64748b', fontFamily: 'inherit',
+                      alignItems: 'center', fontWeight: '600'
+                    }}
                   >
                     <X size={15} />
-                    <span>{t.cancelEdit}</span>
+                    <span>Cancel</span>
                   </button>
-                  <button 
-                    type="submit" 
-                    className="btn-camera-primary"
-                    disabled={loading}
-                  >
-                    <Save size={15} />
-                    <span>{loading ? t.saving : t.saveChanges}</span>
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        )}
+                )}
+              </div>
 
-        {/* TAB 2: SECURITY & PASSWORDS */}
-        {activeTab === 'security' && (
-          <div>
-            <div className="settings-card-header">
-              <div className="settings-card-title-wrap">
-                <div className="settings-card-icon-badge">
-                  <Shield size={22} />
+              <div className="settings-indigo-form-grid">
+                
+                {/* First Name */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.firstName}</label>
+                  <input 
+                    type="text" 
+                    name="firstName" 
+                    value={profile.firstName} 
+                    onChange={handleProfileChange} 
+                    placeholder="Poovarasan" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                    required 
+                  />
                 </div>
+
+                {/* Last Name */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.lastName}</label>
+                  <input 
+                    type="text" 
+                    name="lastName" 
+                    value={profile.lastName} 
+                    onChange={handleProfileChange} 
+                    placeholder="Sambath" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                  />
+                </div>
+
+                {/* Phone Number */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.phone}</label>
+                  <input 
+                    type="tel" 
+                    name="phone" 
+                    value={profile.phone} 
+                    onChange={handleProfileChange} 
+                    placeholder="+91 80726 72917" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                  />
+                </div>
+
+                {/* Email Address */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.email}</label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    value={profile.email} 
+                    onChange={handleProfileChange} 
+                    placeholder="admin@enterprise.com" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                    required 
+                  />
+                </div>
+
+                {/* City / Office */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.city}</label>
+                  <input 
+                    type="text" 
+                    name="city" 
+                    value={profile.city} 
+                    onChange={handleProfileChange} 
+                    placeholder="Bangalore" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                  />
+                </div>
+
+                {/* State / Country */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.country}</label>
+                  <input 
+                    type="text" 
+                    name="country" 
+                    value={profile.country} 
+                    onChange={handleProfileChange} 
+                    placeholder="Karnataka, India" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                  />
+                </div>
+
+                {/* Designation */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.designation}</label>
+                  <input 
+                    type="text" 
+                    name="designation" 
+                    value={profile.designation} 
+                    onChange={handleProfileChange} 
+                    placeholder="Lead Administrator" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                  />
+                </div>
+
+                {/* Department */}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.department}</label>
+                  <input 
+                    type="text" 
+                    name="department" 
+                    value={profile.department} 
+                    onChange={handleProfileChange} 
+                    placeholder="Operations & HR" 
+                    className="settings-indigo-input"
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75 } : {}}
+                  />
+                </div>
+
+                {/* Bio / Responsibilities */}
+                <div className="settings-indigo-field full-width">
+                  <label className="settings-indigo-label">{t.bio}</label>
+                  <textarea 
+                    name="bio" 
+                    value={profile.bio} 
+                    onChange={handleProfileChange} 
+                    placeholder="Administrator responsibilities and scope..." 
+                    className="settings-indigo-textarea" 
+                    rows={3}
+                    readOnly={!isEditMode}
+                    style={!isEditMode ? { cursor: 'default', opacity: 0.75, resize: 'none' } : {}}
+                  />
+                </div>
+
+              </div>
+
+              {/* Save button only visible in edit mode */}
+              {isEditMode && (
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="settings-indigo-btn-amber"
+                  style={{ width: 'auto', padding: '12px 36px', display: 'inline-flex' }}
+                >
+                  <Save size={16} />
+                  <span>{loading ? 'Updating...' : t.updateBtn}</span>
+                </button>
+              )}
+            </form>
+          )}
+
+          {/* TAB 2: Security & Access */}
+          {activeTab === 'security' && (
+            <form onSubmit={handleSave}>
+              <div style={{ background: 'var(--bg-main)', padding: '18px 20px', borderRadius: 'var(--radius-md)', marginBottom: '24px', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h2>{t.securityTitle}</h2>
-                  <p>{t.securitySub}</p>
+                  <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700', color: 'var(--text-main)' }}>{t.twoFactor}</h4>
+                  <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-subtle)' }}>{t.twoFactorDesc}</p>
                 </div>
-              </div>
-            </div>
-
-            {/* Change Password Card */}
-            <div className="security-group-card">
-              <div className="security-group-header">
-                <div className="security-group-title">
-                  <KeyRound size={18} color="#111111" />
-                  <div>
-                    <h3>{t.changePassword}</h3>
-                    <p>Enter a strong password to protect your admin access</p>
-                  </div>
-                </div>
+                <label className="settings-switch">
+                  <input type="checkbox" checked={security.twoFactorAuth} onChange={handleSecurityToggle} />
+                  <span className="settings-slider"></span>
+                </label>
               </div>
 
-              <div className="settings-form-grid">
-                {/* New Password */}
-                <div className="settings-field-group">
-                  <label className="settings-label">
-                    <span>{t.newPassword}</span>
-                  </label>
-                  <div className="settings-input-wrapper">
-                    <Lock size={18} className="settings-input-icon" />
-                    <input
-                      type={showNewPassword ? 'text' : 'password'}
+              <div className="settings-indigo-form-grid">
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.newPassword}</label>
+                  <div style={{ position: 'relative' }}>
+                    <input 
+                      type={showNewPassword ? "text" : "password"}
                       name="newPassword"
                       value={passwords.newPassword}
                       onChange={handlePasswordChange}
                       placeholder="Enter new password"
-                      className="settings-input"
+                      className="settings-indigo-input"
+                      style={{ width: '100%', boxSizing: 'border-box' }}
                     />
-                    <button 
-                      type="button" 
-                      className="settings-password-toggle"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      aria-label="Toggle password visibility"
-                    >
+                    <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
                       {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
-
-                  {/* Password Strength Indicator */}
-                  {passwords.newPassword && (
-                    <div className="password-strength-wrap">
-                      <div className="password-strength-bars">
-                        <div className={`password-strength-segment ${passStrength >= 1 ? 'active-weak' : ''}`} />
-                        <div className={`password-strength-segment ${passStrength >= 2 ? 'active-medium' : ''}`} />
-                        <div className={`password-strength-segment ${passStrength >= 3 ? 'active-strong' : ''}`} />
-                      </div>
-                      <div className="password-strength-info">
-                        <span>Strength:</span>
-                        <strong style={{ 
-                          color: passStrength === 1 ? '#ef4444' : passStrength === 2 ? '#f59e0b' : '#10b981' 
-                        }}>
-                          {passStrength === 1 ? 'Weak' : passStrength === 2 ? 'Good' : 'Strong'}
-                        </strong>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
-                {/* Confirm Password */}
-                <div className="settings-field-group">
-                  <label className="settings-label">
-                    <span>{t.confirmPassword}</span>
-                  </label>
-                  <div className="settings-input-wrapper">
-                    <Lock size={18} className="settings-input-icon" />
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
+                <div className="settings-indigo-field">
+                  <label className="settings-indigo-label">{t.confirmPassword}</label>
+                  <div style={{ position: 'relative' }}>
+                    <input 
+                      type={showConfirmPassword ? "text" : "password"}
                       name="confirmPassword"
                       value={passwords.confirmPassword}
                       onChange={handlePasswordChange}
                       placeholder="Confirm new password"
-                      className="settings-input"
+                      className="settings-indigo-input"
+                      style={{ width: '100%', boxSizing: 'border-box' }}
                     />
-                    <button 
-                      type="button" 
-                      className="settings-password-toggle"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      aria-label="Toggle password visibility"
-                    >
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
                       {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
@@ -1074,130 +966,84 @@ const Settings = () => {
               </div>
 
               {passwordError && (
-                <p style={{ color: '#dc2626', fontSize: '12.5px', marginTop: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <AlertCircle size={15} />
-                  <span>{passwordError}</span>
-                </p>
+                <p style={{ color: '#dc2626', fontSize: '13px', marginBottom: '18px' }}>⚠️ {passwordError}</p>
               )}
-            </div>
 
-            {/* Two-Factor Authentication Card */}
-            <div className="security-group-card">
-              <div className="security-group-header" style={{ marginBottom: 0 }}>
-                <div className="security-group-title">
-                  <ShieldCheck size={20} color="#10b981" />
-                  <div>
-                    <h3>{t.twoFactor}</h3>
-                    <p>{t.twoFactorDesc}</p>
-                  </div>
-                </div>
-                <label className="settings-switch-label">
-                  <input 
-                    type="checkbox" 
-                    checked={security.twoFactorAuth} 
-                    onChange={handleSecurityToggle} 
-                  />
-                  <span className="settings-switch-slider" />
-                </label>
-              </div>
-            </div>
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="settings-indigo-btn-amber"
+                style={{ width: 'auto', padding: '12px 36px', display: 'inline-flex' }}
+              >
+                <Save size={16} />
+                <span>{loading ? 'Updating...' : 'Save Password'}</span>
+              </button>
+            </form>
+          )}
 
-            {/* Active Sessions Info */}
-            <div className="security-group-card">
-              <div className="security-group-header">
-                <div className="security-group-title">
-                  <Laptop size={18} color="#111111" />
-                  <div>
-                    <h3>{t.activeSessions}</h3>
-                    <p>{t.activeSessionsDesc}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="session-info-box">
-                <div className="session-info-left">
-                  <Laptop size={20} className="session-icon" />
-                  <div>
-                    <div className="session-name">Windows PC • Google Chrome</div>
-                    <div className="session-meta">Bangalore, India • Current active session</div>
-                  </div>
-                </div>
-                <span className="session-status-badge">Active Now</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: NOTIFICATIONS */}
-        {activeTab === 'notifications' && (
-          <div>
-            <div className="settings-card-header">
-              <div className="settings-card-title-wrap">
-                <div className="settings-card-icon-badge">
-                  <Bell size={22} />
-                </div>
-                <div>
-                  <h2>{t.notificationsTitle}</h2>
-                  <p>{t.notificationsSub}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="notification-items-list">
-              {[
-                { 
-                  key: 'emailAlerts', 
-                  title: t.emailAlerts, 
-                  desc: t.emailAlertsDesc,
-                  icon: Mail 
-                },
-                { 
-                  key: 'pushNotifications', 
-                  title: t.pushAlerts, 
-                  desc: t.pushAlertsDesc,
-                  icon: BellRing 
-                },
-                { 
-                  key: 'weeklyReport', 
-                  title: t.weeklyDigest, 
-                  desc: t.weeklyDigestDesc,
-                  icon: FileText 
-                },
-                { 
-                  key: 'soundAlerts', 
-                  title: t.soundAlerts, 
-                  desc: t.soundAlertsDesc,
-                  icon: Sparkles 
-                }
-              ].map((item) => {
-                const ItemIcon = item.icon;
-                return (
-                  <div key={item.key} className="notification-item-row">
-                    <div className="notification-item-text">
-                      <div className="notification-item-icon">
-                        <ItemIcon size={18} />
-                      </div>
-                      <div>
-                        <h4>{item.title}</h4>
-                        <p>{item.desc}</p>
-                      </div>
+          {/* TAB 3: Notifications & Language */}
+          {activeTab === 'notifications' && (
+            <div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
+                {[
+                  { key: 'emailAlerts', title: t.emailAlerts, desc: 'Receive instant notifications for employee actions via email' },
+                  { key: 'pushNotifications', title: t.pushAlerts, desc: 'Receive live in-browser popups for scanner & database events' },
+                  { key: 'weeklyReport', title: t.weeklyDigest, desc: 'Consolidated report delivered every Monday' },
+                  { key: 'soundAlerts', title: t.soundAlerts, desc: 'Play notification audio sounds on system activity' }
+                ].map(item => (
+                  <div key={item.key} style={{ background: 'var(--bg-main)', padding: '14px 18px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <h4 style={{ margin: '0 0 2px 0', fontSize: '13.5px', fontWeight: '700', color: 'var(--text-main)' }}>{item.title}</h4>
+                      <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-subtle)' }}>{item.desc}</p>
                     </div>
-                    <label className="settings-switch-label">
-                      <input 
-                        type="checkbox" 
-                        checked={Boolean(notifications[item.key])} 
-                        onChange={() => handleNotificationToggle(item.key)} 
-                      />
-                      <span className="settings-switch-slider" />
+                    <label className="settings-switch">
+                      <input type="checkbox" checked={!!notifications[item.key]} onChange={() => handleNotificationToggle(item.key)} />
+                      <span className="settings-slider"></span>
                     </label>
                   </div>
-                );
-              })}
+                ))}
+              </div>
+
+              {/* Language Selection */}
+              <div style={{ marginBottom: '24px' }}>
+                <label className="settings-indigo-label" style={{ display: 'block', marginBottom: '10px' }}>
+                  {t.languageSelect}
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                  {[
+                    { code: 'English', label: 'English', sub: 'Default' },
+                    { code: 'Tamil', label: 'தமிழ்', sub: 'Tamil' },
+                    { code: 'Spanish', label: 'Español', sub: 'Spanish' }
+                  ].map(lang => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      onClick={() => changeLanguage(lang.code)}
+                      style={{
+                        padding: '14px 10px',
+                        borderRadius: 'var(--radius-sm)',
+                        border: `2px solid ${currentLang === lang.code ? 'var(--accent-emerald)' : 'var(--border-color)'}`,
+                        background: currentLang === lang.code ? 'var(--primary)' : 'var(--bg-main)',
+                        color: currentLang === lang.code ? '#ffffff' : 'var(--text-main)',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        transition: 'all 0.2s',
+                        fontFamily: 'inherit'
+                      }}
+                    >
+                      <div style={{ fontWeight: '800', fontSize: '14px' }}>{lang.label}</div>
+                      <div style={{ fontSize: '11px', opacity: 0.7, marginTop: '2px' }}>{lang.sub}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+        </div>
 
       </div>
+
     </div>
   );
 };

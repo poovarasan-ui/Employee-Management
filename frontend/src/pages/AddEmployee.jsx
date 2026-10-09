@@ -72,10 +72,22 @@ const AddEmployee = () => {
   ];
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    // --- PHONE INPUT RESTRICTION: Numbers only, max 10 digits ---
+    if (name === 'phone') {
+      const numericValue = value.replace(/\D/g, '').slice(0, 10);
+      setFormData({
+        ...formData,
+        [name]: numericValue
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+
     if (error) setError('');
   };
 
@@ -99,6 +111,13 @@ const AddEmployee = () => {
       return;
     }
 
+    // --- PHONE LENGTH VALIDATION CHECK ---
+    if (formData.phone.length !== 10) {
+      setError('Phone number must be 10 digits.');
+      return;
+    }
+
+    // --- Salary Validation check ---
     if (!/^\d+(\.\d+)?$/.test(formData.salary.trim())) {
       setError('Salary must contain numbers only, for example 900000.');
       return;
@@ -165,14 +184,14 @@ const AddEmployee = () => {
           <div className="form-grid">
             {/* Employee ID */}
             <div className="form-group">
-              <label htmlFor="employee_id">Employee ID *</label>
+              <label htmlFor="employee_id">EMPLOYEE ID *</label>
               <div className="input-wrapper">
                 <Hash className="input-icon" size={17} />
                 <input
                   id="employee_id"
                   type="text"
                   name="employee_id"
-                  placeholder="e.g. EMP-101"
+                  placeholder="E.x : EMP-101"
                   value={formData.employee_id}
                   onChange={handleChange}
                   className="form-input"
@@ -183,14 +202,14 @@ const AddEmployee = () => {
 
             {/* Full Name */}
             <div className="form-group">
-              <label htmlFor="name">Full Name *</label>
+              <label htmlFor="name">FULL NAME *</label>
               <div className="input-wrapper">
                 <UserPlus className="input-icon" size={17} />
                 <input
                   id="name"
                   type="text"
                   name="name"
-                  placeholder="e.g. Rahul Sharma"
+                  placeholder="E.G : Rohit Sharma"
                   value={formData.name}
                   onChange={handleChange}
                   className="form-input"
@@ -201,14 +220,16 @@ const AddEmployee = () => {
 
             {/* Email */}
             <div className="form-group">
-              <label htmlFor="email">Email Address *</label>
+              <label htmlFor="email">EMAIL ADDRESS *</label>
               <div className="input-wrapper">
                 <Mail className="input-icon" size={17} />
                 <input
                   id="email"
                   type="email"
+
+
                   name="email"
-                  placeholder="e.g. rahul.sharma@company.com"
+                  placeholder="E.x : rahul.sharma@company.com"
                   value={formData.email}
                   onChange={handleChange}
                   className="form-input"
@@ -219,14 +240,15 @@ const AddEmployee = () => {
 
             {/* Phone */}
             <div className="form-group">
-              <label htmlFor="phone">Phone Number *</label>
+              <label htmlFor="phone">PHONE NUMBER*</label>
               <div className="input-wrapper">
                 <Phone className="input-icon" size={17} />
                 <input
                   id="phone"
                   type="tel"
                   name="phone"
-                  placeholder="e.g. +91 98765 43210"
+                  maxLength={10}
+                  placeholder="E.x : 9876543210"
                   value={formData.phone}
                   onChange={handleChange}
                   className="form-input"
@@ -237,14 +259,14 @@ const AddEmployee = () => {
 
             {/* Department */}
             <div className="form-group">
-              <label htmlFor="department">Department *</label>
+              <label htmlFor="department">DEPARTMENT *</label>
               <div className="input-wrapper">
                 <Building2 className="input-icon" size={17} />
                 <input
                   id="department"
                   type="text"
                   name="department"
-                  placeholder="e.g. Engineering"
+                  placeholder="E.x : Engineering"
                   value={formData.department}
                   onChange={handleChange}
                   list="department-suggestions"
@@ -261,14 +283,14 @@ const AddEmployee = () => {
 
             {/* Designation */}
             <div className="form-group">
-              <label htmlFor="designation">Designation *</label>
+              <label htmlFor="designation">DESIGNATION *</label>
               <div className="input-wrapper">
                 <Briefcase className="input-icon" size={17} />
                 <input
                   id="designation"
                   type="text"
                   name="designation"
-                  placeholder="e.g. Senior Software Engineer"
+                  placeholder="E.x : Senior Software Engineer"
                   value={formData.designation}
                   onChange={handleChange}
                   list="designation-suggestions"
@@ -285,14 +307,14 @@ const AddEmployee = () => {
 
             {/* Annual salary in rupees */}
             <div className="form-group">
-              <label htmlFor="salary">Annual Salary (Rs) *</label>
+              <label htmlFor="salary">ANNUAL SALARY (RS) *</label>
               <div className="input-wrapper">
                 <IndianRupee className="input-icon" size={17} />
                 <input
                   id="salary"
                   type="number"
                   name="salary"
-                  placeholder="e.g. 900000"
+                  placeholder="E.x : 900000"
                   min="0"
                   step="0.01"
                   value={formData.salary}
@@ -305,7 +327,7 @@ const AddEmployee = () => {
 
             {/* Joining Date */}
             <div className="form-group">
-              <label htmlFor="joining_date">Joining Date *</label>
+              <label htmlFor="joining_date">JOINING DATE *</label>
               <div className="input-wrapper">
                 <Calendar className="input-icon" size={17} />
                 <input

@@ -153,7 +153,16 @@ export default function ScanData() {
     });
 
     return (
-        <div style={{ padding: '24px', fontFamily: 'Inter, Segoe UI, sans-serif', background: '#f8fafc', minHeight: '100vh', position: 'relative' }}>
+        <div style={{
+            padding: '28px 36px',
+            fontFamily: 'var(--font-main)',
+            WebkitFontSmoothing: 'antialiased',
+            MozOsxFontSmoothing: 'grayscale',
+            letterSpacing: '-0.012em',
+            background: '#f8fafc',
+            minHeight: '100vh',
+            position: 'relative'
+        }}>
             
             {/* 1. SIDE POPUP TOAST NOTIFICATION (BOTTOM-RIGHT) */}
             {sidePopupData && (
@@ -219,7 +228,7 @@ export default function ScanData() {
                                     alt="Scanned QR" 
                                     style={{ width: '100px', height: '100px', borderRadius: '6px', border: '1px solid #cbd5e1', padding: '4px', background: '#fff', marginBottom: '8px' }} 
                                 />
-                                <p style={{ margin: 0, fontSize: '11px', fontFamily: 'monospace', wordBreak: 'break-all', color: '#334155' }}>{duplicateMatchInfo.scannedCode}</p>
+                                <p style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--font-mono)', wordBreak: 'break-all', color: '#334155' }}>{duplicateMatchInfo.scannedCode}</p>
                             </div>
 
                             <div style={{ background: '#f0fdf4', padding: '12px', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
@@ -229,7 +238,7 @@ export default function ScanData() {
                                     alt="Stored QR" 
                                     style={{ width: '100px', height: '100px', borderRadius: '6px', border: '1px solid #bbf7d0', padding: '4px', background: '#fff', marginBottom: '8px' }} 
                                 />
-                                <p style={{ margin: 0, fontSize: '11px', fontFamily: 'monospace', wordBreak: 'break-all', color: '#334155' }}>{duplicateMatchInfo.record.qrCode}</p>
+                                <p style={{ margin: 0, fontSize: '11px', fontFamily: 'var(--font-mono)', wordBreak: 'break-all', color: '#334155' }}>{duplicateMatchInfo.record.qrCode}</p>
                             </div>
                         </div>
 
@@ -282,7 +291,7 @@ export default function ScanData() {
                             onChange={(e) => setCurrentInput(e.target.value)}
                             onKeyDown={handleScanSubmit}
                             placeholder="Scan QR code / Barcode here (Press Enter)..."
-                            style={{ width: '100%', padding: '10px 14px', fontSize: '14px', fontFamily: 'monospace', border: '2px solid #0ea5e9', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
+                            style={{ width: '100%', padding: '10px 14px', fontSize: '14px', fontFamily: 'var(--font-mono)', border: '2px solid #0ea5e9', borderRadius: '8px', outline: 'none', boxSizing: 'border-box' }}
                         />
                     </div>
                 </div>
@@ -343,12 +352,13 @@ export default function ScanData() {
                                         />
                                     </td>
 
-                                    <td style={{ padding: '12px 10px', fontFamily: 'monospace', fontWeight: '700', color: '#0f172a', wordBreak: 'break-all', maxWidth: '180px' }}>
+                                    <td style={{ padding: '12px 10px', fontFamily: 'var(--font-mono)', fontWeight: '700', color: '#0f172a', wordBreak: 'break-all', maxWidth: '180px' }}>
                                         {scan.qrCode}
                                     </td>
 
                                     <td style={{ padding: '12px 10px', color: '#475569', fontWeight: '600' }}>
-                                        🖨️ {scan.scannerDevice}
+                                       
+                                        {scan.scannerDevice}
                                     </td>
 
                                     <td style={{ padding: '12px 10px' }}>

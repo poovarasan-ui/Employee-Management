@@ -10,6 +10,7 @@ const Employees = () => {
   const roleFilter = searchParams.get('role') || '';
 
   const [employees, setEmployees] = useState(() => getCachedEmployees()?.employees || []);
+  const [totalCount, setTotalCount] = useState(() => getCachedEmployees()?.employees?.length || 0);
   const [loading, setLoading] = useState(() => !getCachedEmployees());
   const [searchTerm, setSearchTerm] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('All');
@@ -29,11 +30,15 @@ const Employees = () => {
       const data = await getEmployees(params);
       if (data.success) {
         setEmployees(data.employees);
+        // Only update total count when no filters are active
+        if (!params.search && !params.department && !params.designation && !params.role) {
+          setTotalCount(data.count);
+        }
       }
     } catch (err) {
       setNotification({
         type: 'error',
-        message: err.response?.data?.message || 'Failed to fetch employees list.'
+       
       });
     } finally {
       setLoading(false);
@@ -49,7 +54,13 @@ const Employees = () => {
       <div className="page-header-banner">
         <div>
           <h2>Employee Directory</h2>
-          <p>Manage, search, filter, and maintain organizational personnel records</p>
+          <p>Manage, search, filter, and maintain organizational personnel records
+            {totalCount > 0 && (
+              <span style={{ marginLeft: '10px', background: '#111111', color: '#ffffff', fontSize: '11.5px', fontWeight: '700', padding: '2px 10px', borderRadius: '999px', letterSpacing: '0.04em' }}>
+                {totalCount} Total
+              </span>
+            )}
+          </p>
         </div>
         <div className="page-header-actions">
           <button
@@ -79,6 +90,7 @@ const Employees = () => {
 
       <EmployeeTable
         employees={employees}
+        totalCount={totalCount}
         loading={loading}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}

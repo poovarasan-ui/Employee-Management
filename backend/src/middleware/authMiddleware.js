@@ -30,5 +30,18 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Make sure this is explicitly exported like this:
-module.exports = { protect };
+// Role-based authorization middleware
+const authorize = (...roles) => {
+  return (req, res, next) => {
+    const userRole = req.user?.role || 'admin';
+    if (!roles.includes(userRole)) {
+      return res.status(403).json({
+        success: false,
+        message: `Forbidden: Role '${userRole}' is not permitted to perform this action.`
+      });
+    }
+    next();
+  };
+};
+
+module.exports = { protect, authorize };

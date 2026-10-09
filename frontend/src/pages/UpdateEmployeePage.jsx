@@ -17,7 +17,8 @@ const UpdateEmployeePage = () => {
       if (searchTerm.trim()) params.search = searchTerm.trim();
       if (departmentFilter !== 'All') params.department = departmentFilter;
 
-      const data = await getEmployees(params);
+      const data = await getEmployees(
+        params);
       if (data.success) {
         setEmployees(data.employees);
       }
@@ -67,17 +68,6 @@ const UpdateEmployeePage = () => {
 
   return (
     <div className="crud-page">
-      {/* Header */}
-      <div className="crud-header-banner update-theme">
-        <div className="crud-icon-badge update">
-          <Edit3 size={24} />
-        </div>
-        <div>
-          <div className="crud-op-tag update">UPDATE OPERATION</div>
-          <h2>Update Employee Details</h2>
-          <p>Search and select any employee record to modify their personal details, salary, department, or designation.</p>
-        </div>
-      </div>
 
       {/* Filter Bar */}
       <div className="table-card">
@@ -147,7 +137,7 @@ const UpdateEmployeePage = () => {
                       </div>
                     </td>
                     <td>{emp.email}</td>
-                    <td><span className="department-badge">{emp.department}</span></td>
+                    <td><span className="department-badge" data-dept={emp.department}>{emp.department}</span></td>
                     <td>{emp.designation}</td>
                     <td><span className="salary-text">{formatSalaryINR(emp.salary)}</span></td>
                     <td style={{ textAlign: 'center' }}>

@@ -142,10 +142,14 @@ const EditEmployee = () => {
       setSaveLoading(true);
       const res = await updateEmployee(id, formData);
 
-      // Successfully updated -> Log activity here using formData.name
       logActivity('UPDATE', 'Employee Updated', `${formData.name}'s details were updated`);
 
       setSuccess(res.message || 'Employee updated successfully!');
+
+      // Navigate back to update page after 2 seconds
+      setTimeout(() => {
+        navigate('/employees/update');
+      }, 2000);
 
     } catch (err) {
       const msg = err.response?.data?.message || 'Failed to update employee. Please try again.';
@@ -280,7 +284,7 @@ const EditEmployee = () => {
                   id="department"
                   type="text"
                   name="department"
-                  placeholder="e.g. Engineering"
+                  placeholder="E.x : Engineering"
                   value={formData.department}
                   onChange={handleChange}
                   list="department-suggestions"
@@ -327,7 +331,7 @@ const EditEmployee = () => {
                   id="salary"
                   type="number"
                   name="salary"
-                  placeholder="e.g. 900000"
+                  placeholder="E.x : 900000"
                   min="0"
                   step="0.01"
                   value={formData.salary}
