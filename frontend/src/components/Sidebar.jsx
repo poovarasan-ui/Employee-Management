@@ -9,6 +9,8 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 
   const isActive = (path) => location.pathname === path;
 
+  
+
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">

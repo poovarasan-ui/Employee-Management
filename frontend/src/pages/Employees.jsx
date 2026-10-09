@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Plus, Users, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Plus, Users, RefreshCw, AlertCircle, CheckCircle2, CloudSnow } from 'lucide-react';
 import { getEmployees, getCachedEmployees } from '../services/employeeService';
 import EmployeeTable from '../components/EmployeeTable';
 
@@ -91,4 +91,4 @@ const Employees = () => {
   );
 };
 
-export default Employees;cls
+export default Employees;

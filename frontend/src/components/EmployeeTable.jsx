@@ -62,7 +62,8 @@ const EmployeeTable = ({
     'Sales Executive',
     'Operations Manager',
     'Recruiter',
-    'Support Specialist'
+    'Support Specialist',
+    'Designer'
   ];
 
   const handleResetFilters = () => {
